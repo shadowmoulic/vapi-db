@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../supabase';
-import { LogIn, UserPlus } from 'lucide-react';
+import { LogIn, UserPlus, Key } from 'lucide-react';
 
 const LoginPage = () => {
     const [loading, setLoading] = useState(false);
@@ -41,8 +41,11 @@ const LoginPage = () => {
         }}>
             <div className="glass-panel" style={{ width: '400px', padding: '40px' }}>
                 <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                    <div style={{ width: 64, height: 64, borderRadius: 16, background: 'rgba(59, 130, 246, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--primary)' }}>
+                        <Key size={32} />
+                    </div>
                     <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>RealtyVoice</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>Secure Agency Access</p>
+                    <p style={{ color: 'var(--text-muted)' }}>Secure Agency Access Portal</p>
                 </div>
 
                 <form onSubmit={handleAuth}>
@@ -87,7 +90,10 @@ const LoginPage = () => {
                                 Authenticating...
                             </div>
                         ) : (
-                            isSignUp ? 'Initialize Client Account' : 'Secure Login'
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
+                                {isSignUp ? <UserPlus size={18} /> : <LogIn size={18} />}
+                                {isSignUp ? 'Initialize Client Account' : 'Secure Login'}
+                            </div>
                         )}
                     </button>
 
