@@ -1,30 +1,32 @@
 import axios from 'axios';
 
-const API_KEY = import.meta.env.VITE_VAPI_API_KEY;
+const DEFAULT_KEY = import.meta.env.VITE_VAPI_API_KEY;
 
-const api = axios.create({
-    baseURL: 'https://api.vapi.ai',
-    headers: {
-        Authorization: `Bearer ${API_KEY}`,
-    },
-});
+const getApi = (key?: string) => {
+    return axios.create({
+        baseURL: 'https://api.vapi.ai',
+        headers: {
+            Authorization: `Bearer ${key || DEFAULT_KEY}`,
+        },
+    });
+};
 
-export const getCalls = async () => {
-    const response = await api.get('/call');
+export const getCalls = async (key?: string) => {
+    const response = await getApi(key).get('/call');
     return response.data;
 };
 
-export const getAssistants = async () => {
-    const response = await api.get('/assistant');
+export const getAssistants = async (key?: string) => {
+    const response = await getApi(key).get('/assistant');
     return response.data;
 };
 
-export const getAssistant = async (id: string) => {
-    const response = await api.get(`/assistant/${id}`);
+export const getAssistant = async (id: string, key?: string) => {
+    const response = await getApi(key).get(`/assistant/${id}`);
     return response.data;
 };
 
-export const updateAssistant = async (id: string, data: any) => {
-    const response = await api.patch(`/assistant/${id}`, data);
+export const updateAssistant = async (id: string, data: any, key?: string) => {
+    const response = await getApi(key).patch(`/assistant/${id}`, data);
     return response.data;
 };
