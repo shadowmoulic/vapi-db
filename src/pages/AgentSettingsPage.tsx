@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { RefreshCw, Volume2, Sparkles, MessageSquare, Zap, Key, UserCheck } from 'lucide-react';
+import { RefreshCw, Volume2, Sparkles, MessageSquare, Zap, UserCheck } from 'lucide-react';
 import { getAssistants, updateAssistant } from '../api';
 import { AuthContext } from '../App';
 import { supabase } from '../supabase';
