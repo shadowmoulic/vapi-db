@@ -16,9 +16,13 @@ const LoginPage = () => {
 
         try {
             if (isSignUp) {
-                const { error } = await supabase.auth.signUp({ email, password });
+                const { error, data } = await supabase.auth.signUp({ email, password });
                 if (error) throw error;
-                alert('Check your email for confirmation!');
+                // If email confirmation is off, Supabase logs them in immediately.
+                // We show an alert only if no session was created (e.g. if confirmation is actually required).
+                if (!data.session) {
+                    alert('Account initialized! You can now log in.');
+                }
             } else {
                 const { error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
