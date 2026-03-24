@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Download, X, Search } from 'lucide-react';
 import { getCalls, getAssistants } from '../api';
+import { AuthContext } from '../App';
 
 const CallsPage = () => {
+    const { vapiConfig } = useContext(AuthContext);
     const [calls, setCalls] = useState<any[]>([]);
     const [assistants, setAssistants] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -13,14 +15,14 @@ const CallsPage = () => {
 
     useEffect(() => {
         fetchInitialData();
-    }, []);
+    }, [vapiConfig.apiKey]);
 
     const fetchInitialData = async () => {
         try {
             setLoading(true);
             const [callsData, assistantsData] = await Promise.all([
-                getCalls(),
-                getAssistants()
+                getCalls(vapiConfig.apiKey!),
+                getAssistants(vapiConfig.apiKey!)
             ]);
             setCalls(callsData);
             setAssistants(assistantsData);

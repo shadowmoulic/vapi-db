@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Users, PhoneOutgoing, Clock, CheckCircle2 } from 'lucide-react';
 import { getCalls, getAssistants } from '../api';
+import { AuthContext } from '../App';
 
 const DashboardPage = () => {
+    const { vapiConfig } = useContext(AuthContext);
     const [calls, setCalls] = useState<any[]>([]);
     const [assistants, setAssistants] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -11,14 +13,14 @@ const DashboardPage = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [vapiConfig.apiKey]); // Re-fetch if the API key changes (e.g. login)
 
     const fetchData = async () => {
         try {
             setLoading(true);
             const [callsData, assistantsData] = await Promise.all([
-                getCalls(),
-                getAssistants()
+                getCalls(vapiConfig.apiKey!),
+                getAssistants(vapiConfig.apiKey!)
             ]);
             setCalls(callsData);
             setAssistants(assistantsData);
@@ -49,7 +51,7 @@ const DashboardPage = () => {
     return (
         <div>
             <div className="flex-between" style={{ marginBottom: 32 }}>
-                <h2 style={{ fontSize: '1.75rem', fontWeight: 600 }}>Overview</h2>
+                <h2 style={{ fontSize: '1.75rem', fontWeight: 600 }}>Performance Metrics</h2>
                 <div className="form-group" style={{ marginBottom: 0, minWidth: 200 }}>
                     <select
                         className="form-control"
@@ -68,7 +70,7 @@ const DashboardPage = () => {
             </div>
 
             {loading ? (
-                <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Syncing secure data...</div>
+                <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Synchronizing Client Data...</div>
             ) : (
                 <>
                     <div className="stats-grid">
@@ -102,14 +104,14 @@ const DashboardPage = () => {
                                 <Users />
                             </div>
                             <div className="stat-details">
-                                <h3>Cost</h3>
+                                <h3>Gross Cost</h3>
                                 <p>${filteredCalls.reduce((acc, c) => acc + (c.cost || 0), 0).toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="glass-panel" style={{ padding: 24 }}>
-                        <h3 style={{ marginBottom: 16 }}>Recent Call Activity</h3>
+                        <h3 style={{ marginBottom: 16 }}>Live Call Activity</h3>
                         <div className="table-container">
                             <table className="data-table">
                                 <thead>
@@ -139,7 +141,7 @@ const DashboardPage = () => {
                                     ))}
                                     {filteredCalls.length === 0 && (
                                         <tr>
-                                            <td colSpan={5} style={{ textAlign: 'center', padding: 32 }}>No calls found for this agent.</td>
+                                            <td colSpan={5} style={{ textAlign: 'center', padding: 32 }}>No active calls for this client selection.</td>
                                         </tr>
                                     )}
                                 </tbody>
